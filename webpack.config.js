@@ -3,10 +3,11 @@ const path = require('path');
 
 
 module.exports = {
-  entry: ['babel-polyfill','./src/index.js'],
+  entry: ['./src/index.js'],
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    libraryTarget: 'umd2'
   },
   module:{
     rules: [
@@ -16,5 +17,8 @@ module.exports = {
         exclude: /node_modules/
       },
     ]
-  } 
+  },
+  plugins: [
+    
+  ]
 }

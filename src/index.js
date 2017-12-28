@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import { req, multiRequestWithPromise, multiRequest } from './request.js';
 
 // 单个请求

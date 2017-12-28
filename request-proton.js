@@ -32,7 +32,7 @@ const publicReq = async(params) => {
 }
 
 // 请求超时函数
-const timeoutfn = (delay = 10000) => {
+const timeoutfn = (delay) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve('请求超时');
@@ -41,9 +41,9 @@ const timeoutfn = (delay = 10000) => {
 }
 
 // 单个请求 存在请求超时
-export async function req(params) {
+export async function req(params, delay=10000) {
   try {
-    const response = await Promise.race([timeoutfn(), publicReq(params)]);
+    const response = await Promise.race([timeoutfn(delay), publicReq(params)]);
     return response;
   } catch (error) {
     throw new Error(error);
