@@ -3141,6 +3141,10 @@ platform@^1.3.1:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.4.tgz#6f0fb17edaaa48f21442b3a975c063130f1c3ebd"
 
+plupload@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/plupload/-/plupload-2.3.6.tgz#2608acf735d5e8db83248724d78d81757bb43866"
+
 portfinder@^1.0.9:
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.13.tgz#bb32ecd87c27104ae6ee44b5a3ccbf0ebb1aede9"
