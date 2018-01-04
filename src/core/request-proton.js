@@ -12,7 +12,11 @@ const axiosInstance = () => {
   return instance;
 }
 
-
+/**
+ * 
+ * axios 请求的中间件,可根据需求，修改header
+ * @param {Object} instance axios实例
+ */
 const reqmiddleware = (instance) => {
   instance.interceptors.request.use((config) => {
     if (localStorage.getItem('token')) {
