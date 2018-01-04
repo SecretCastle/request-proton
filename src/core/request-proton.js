@@ -13,10 +13,56 @@ const axiosInstance = () => {
 }
 
 
+const reqmiddleware = (instance) => {
+  instance.interceptors.request.use((config) => {
+    if (localStorage.getItem('token')) {
+      config.headers = {
+        Authorization: `token ${localStorage.getItem('token')}`
+      }
+    }
+    return config;
+  }, (err) => {
+    throw new Error(err);
+  })
+}
+
+/**
+ * 
+ * axios 请求成功后响应的中间件
+ * @param {Object} instance axios实例
+ */
+const resMiddleware = (instance) => {
+  instance.interceptors.response.use((res) => {
+    if (res.status !== 200) {
+      throw new Error(res.statusText);
+    }
+    return res;
+  }, (err) => {
+    console.log(err);
+    if (err.response) {
+      switch (err.response.status) {
+        case 500:
+          throw new Error('服务器错误', error.response.data.msg);
+          break;
+        case 401:
+          break;
+        case 404:
+          throw new Error('请求路径不存在', error.response.data.msg);
+          break;
+        default:
+          break;
+      }
+      return Promise.reject(err);
+    }
+  })
+}
+
 //请求实例
 const publicReq = async(params) => {
   const { url, method, param } = params;
   const instance = axiosInstance();
+  reqmiddleware(instance);
+  resMiddleware(instance);
   return await instance({
     url: url,
     method: method || 'get',
@@ -41,7 +87,7 @@ const timeoutfn = (delay) => {
 }
 
 // 单个请求 存在请求超时
-export async function req(params, delay=10000) {
+export async function req(params, delay = 10000) {
   try {
     const response = await Promise.race([timeoutfn(delay), publicReq(params)]);
     return response;

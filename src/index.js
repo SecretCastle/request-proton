@@ -1,2 +1,5 @@
 import 'babel-polyfill';
-import './upload_demo';
+// react test
+// import './upload_demo';
+
+import './req_demo';
