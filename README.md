@@ -89,4 +89,4 @@ getData().then(res => {
 
 ## 杂项
 
-可行的一种React优化方式， PurComponent的使用, 详细参见 `/src/extra/purecomponents`
+可行的一种React优化方式， PureComponent的使用, 详细参见 `/src/extra/purecomponents`
