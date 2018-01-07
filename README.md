@@ -86,3 +86,7 @@ getData().then(res => {
     // res 为上面res2 返回的promise对象
 })
 ```
+
+## 杂项
+
+可行的一种React优化方式， PurComponent的使用, 详细参见 `/src/extra/purecomponents`
