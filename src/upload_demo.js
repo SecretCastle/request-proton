@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Uploader from './core/request-upload';
+import AliUploader from './core/request-upload-ali';
+import BaiduUplaoder from './core/request-upload-baidu';
 
 const uploaded = (filepath) => {
-	console.log(filepath);
+  console.log(filepath);
 };
 
 ReactDOM.render(
-	<Uploader type={'image'} id={'upload_product'} success={uploaded}/>
-	,
-	document.getElementById('app')
+  <AliUploader type={'image'} id={'upload_product'} success={uploaded}/>
+  ,
+  document.getElementById('app')
 );

@@ -14,51 +14,51 @@ import ReactDOM from 'react-dom';
  */
 
 class ExtraText extends Component {
-	constructor() {
-		super();
-		this.state = {
-			name : 'chen'
-		};
-	}
+  constructor() {
+    super();
+    this.state = {
+      name : 'chen'
+    };
+  }
 
 	changesth = () => {
-		this.setState({
-			name: 'my name is CHN_ROLL',
-		});
+	  this.setState({
+	    name: 'my name is CHN_ROLL',
+	  });
 	}
 
 	render() {
-		console.log('main render');
-		return (
-			<div>
-				<ChildTest name={this.state.name}/>
-				<ChildTestNotPur name={this.state.name}/>
-				<button onClick={this.changesth}>click me</button>
-			</div>
-		);
+	  console.log('main render');
+	  return (
+	    <div>
+	      <ChildTest name={this.state.name}/>
+	      <ChildTestNotPur name={this.state.name}/>
+	      <button onClick={this.changesth}>click me</button>
+	    </div>
+	  );
 	}
 }
 
 class ChildTest extends PureComponent {
-	render() {
-		console.log('PurComponent Render');
-		return (
-			<div>{this.props.name}</div>
-		);
-	}
+  render() {
+    console.log('PurComponent Render');
+    return (
+      <div>{this.props.name}</div>
+    );
+  }
 }
 
 class ChildTestNotPur extends Component {
-	render() {
-		console.log('Component Render');
-		return (
-			<div>{this.props.name}</div>
-		);
-	}
+  render() {
+    console.log('Component Render');
+    return (
+      <div>{this.props.name}</div>
+    );
+  }
 }
 
 
 ReactDOM.render(
-	<ExtraText />,
-	document.getElementById('app')
+  <ExtraText />,
+  document.getElementById('app')
 );

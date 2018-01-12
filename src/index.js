@@ -1,6 +1,10 @@
 import 'babel-polyfill';
-// react test
-// import './upload_demo';
 
+// react test
+import './upload_demo';
+
+// request test
 // import './req_demo';
-import './extra/purecomponents.jsx';
+
+// PureComponent Test
+// import './extra/purecomponents';

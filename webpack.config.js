@@ -12,7 +12,11 @@ module.exports = {
 	module:{
 		rules: [
 			{
-				test: /\.js?x$/,
+				test: /\.js$/,
+				loaders: ['babel-loader', 'eslint-loader'],
+				exclude: /node_modules/
+			},{
+				test: /\.jsx$/,
 				loaders: ['babel-loader', 'eslint-loader'],
 				exclude: /node_modules/
 			},{

@@ -31,36 +31,36 @@ import { req } from './request-proton';
 
 const plupload = require('plupload');
 const HOST = 'https://mxchip-fog.oss-cn-beijing.aliyuncs.com';
-const URL_SERVER = 'http://106.14.36.92:30013';
+const URL_SERVER = 'https://cnapitest.fogcloud.io';
 let DIR_UPLOAD = '/';
 
 const styles = {
-	uploaderWrap: {
-		display: 'inline-block',
-		position: 'relative',
-	},
-	innerBtn: {
-		padding: '5px 10px',
-		backgroundColor: '#1890ff',
-		borderRadius: '3px',
-		color: '#fff',
-		fontSize: '12px',
-		cursor: 'pointer',
-	},
-	successInfo: {
-		fontSize: '12px'
-	}
+  uploaderWrap: {
+    display: 'inline-block',
+    position: 'relative',
+  },
+  innerBtn: {
+    padding: '5px 10px',
+    backgroundColor: '#1890ff',
+    borderRadius: '3px',
+    color: '#fff',
+    fontSize: '12px',
+    cursor: 'pointer',
+  },
+  successInfo: {
+    fontSize: '12px'
+  }
 };
 
 class Uploader extends React.Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			success: false,
-			error: false,
-			msg:'',
-		};
-	}
+  constructor(props){
+    super(props);
+    this.state = {
+      success: false,
+      error: false,
+      msg:'',
+    };
+  }
 
   // 这里还能走async/await惊呆了我的小伙伴
   componentDidMount = async () => {
@@ -146,7 +146,7 @@ class Uploader extends React.Component {
 
   // 根据type获取对应的token
   getTokenWithType = async (type) => {
-  	let reqUrl = `${URL_SERVER}/gettoken_${type}`;
+  	let reqUrl = `${URL_SERVER}/gettoken_product`;
   	const data =  await req({url: reqUrl});
   	const obj = data.data;
   	return obj;
@@ -190,9 +190,9 @@ class Uploader extends React.Component {
 }
 
 Uploader.propTypes = {
-	type: PropTypes.string.isRequired,
-	id: PropTypes.string.isRequired,
-	success: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  success: PropTypes.func.isRequired,
 };
 
 export default Uploader;
