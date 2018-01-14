@@ -4,7 +4,7 @@ import { req } from './request-proton';
 const BdUploader = require('bce-bos-uploader/bce-bos-uploader.bundle');
 
 const HOST = '';
-const URL_SERVER = 'https://cnapitest.fogcloud.io';
+const URL_SERVER = '';
 let URL_UPLOAD = '/';
 
 

@@ -30,8 +30,8 @@ import { req } from './request-proton';
 
 
 const plupload = require('plupload');
-const HOST = 'https://mxchip-fog.oss-cn-beijing.aliyuncs.com';
-const URL_SERVER = 'https://cnapitest.fogcloud.io';
+const HOST = ''; // 从gettoken中获取
+const URL_SERVER = '';
 let DIR_UPLOAD = '/';
 
 const styles = {
