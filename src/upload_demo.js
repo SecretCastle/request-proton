@@ -8,7 +8,14 @@ const uploaded = (filepath) => {
 };
 
 ReactDOM.render(
-  <AliUploader type={'image'} id={'upload_product'} success={uploaded}/>
+  <div>
+    <AliUploader type={'image'} id={'upload_product'} success={uploaded}/>
+    <BaiduUplaoder
+      type={'product'}
+      id={'upload_bd_product'}
+      success={uploaded}
+    />
+  </div>
   ,
   document.getElementById('app')
 );

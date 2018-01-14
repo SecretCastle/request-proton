@@ -137,7 +137,7 @@ class Uploader extends React.Component {
   	};
 
   	up.setOption({
-  		'url': HOST,
+  		'url': res.host,
   		'multipart_params': new_multipart_params
   	});
 
@@ -181,7 +181,7 @@ class Uploader extends React.Component {
   				children ? 
   					children
   					: 
-  					<div style={styles.innerBtn}>点击上传</div>
+  					<div style={styles.innerBtn}>点击上传_ali</div>
   			}
   			<span style={styles.successInfo}>{this.state.success ? '上传成功' : (this.state.error ? this.state.msg : '')}</span>
   		</div>

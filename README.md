@@ -1,10 +1,12 @@
 # Request Document
 
-> `./src/core/request-upload.js` 基于`plupload`的OSS直传React组件
+> `./src/core/request-upload-baidu.js` 基于[bce-bos-uploader](https://github.com/leeight/bce-bos-uploader)的OSS直传React组件
+
+> `./src/core/request-upload.js` 基于[plupload](https://github.com/moxiecode/plupload)的OSS直传React组件
 
 里面需要的是服务端支持，纯js的需要再一步细化，如获取加密签名, `accesskey`和`accessid`加密等
 
-> `./src/core/request-proton.js` 封装的请求文件
+> `./src/core/request-proton.js` 封装的请求文件，基于[axios](https://github.com/axios/axios)
 
  使用
 
