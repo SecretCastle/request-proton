@@ -1,5 +1,6 @@
 import 'babel-polyfill';
 
+
 // react test
 import './upload_demo';
 

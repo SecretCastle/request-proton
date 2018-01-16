@@ -1,11 +1,37 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { req } from './request-proton';
+import { Spin, Icon, Button } from 'antd';
 const BdUploader = require('bce-bos-uploader/bce-bos-uploader.bundle');
 
-const HOST = '';
-const URL_SERVER = '';
-let URL_UPLOAD = '/';
+import { req } from './request-proton';
+
+
+/**
+ * 工具类方法
+ */
+
+const randomFileName = (file) => {
+  const filename = file.name;
+  
+  // 校验字符串中是否存在特殊字符的正则表达式
+  const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\]<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+  let nfn = '';
+  for(let i = 0 ; i < filename.length; i++ ){
+    // 如果这一位是空格，则忽略
+    if(filename.substr(i, 1)!== ' '){
+      nfn += filename.substr(i ,1).replace(pattern, ''); 
+    }
+  }
+  console.log(nfn);
+  // 增加时间戳，防止上传的文件名重复
+  const timestamp = new Date().getTime();
+  // 获取 '.'最后出现的位置
+  const lastIndex = nfn.lastIndexOf('.');
+  // 拼接字符串
+  const head = nfn.substr(0, lastIndex) + timestamp;
+  // 返回字符串
+  return `${head}${nfn.substr(lastIndex)}`;
+};
 
 
 const styles = {
@@ -24,6 +50,10 @@ const styles = {
   },
   successInfo: {
     fontSize: '12px'
+  },
+  progress: {
+    fontSize: '12px',
+    paddingLeft: '5px'
   }
 };
 
@@ -36,61 +66,146 @@ const styles = {
  */
 
 class Uploader extends PureComponent {
-
-  getToken = async () => {
-    const reqUrl = `${URL_SERVER}/gettoken_product`;
-    const data = await req({url: reqUrl});
-    return data.data;
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: false,
+      show: false
+    };
   }
 
-  setParams = (data) => {
-    const host = '';
+  componentDidMount() {
+    this.createUploader();
   }
 
-  createUploader = (data) => {
-    const { id, success } = this.props;
+  createUploader = () => {
+    const _this = this;
+    const { 
+      id,
+      success,
+      bucket = 'fog-pub-test',
+      bosEndPoint = 'https://fog-pub-test.gz.bcebos.com',
+      uptokenUrl = 'https://cnapitest.fogcloud.io/gettoken/'
+    } = this.props;
+
     const uploader = new BdUploader.bos.Uploader({
-      bos_bucket: 'baidubce',
-      bos_endpoint: data.host,
+      bos_bucket: bucket,
+      bos_endpoint: bosEndPoint,
       browse_button: document.getElementById(id),
-      uptoken_url: 'http://127.0.0.1:1337/ack',  
-      // 需要后端支持，明儿协调下， 需要如下url返回的
-      // https://cloud.baidu.com/api/authorization?callback=jQuery321021050317675941788_1515914098189&httpMethod=PUT&path=%2Fv1%2Fbaidubce%2Ferror_code.md&queries=%7B%7D&headers=%7B%22x-bce-date%22%3A%222018-01-14T07%3A22%3A30Z%22%2C%22Content-Type%22%3A%22application%2Foctet-stream%3B%20charset%3DUTF-8%22%2C%22Host%22%3A%22mxchip-fog.oss-cn-beijing.aliyuncs.com%22%2C%22Content-Length%22%3A4273%7D&_=1515914098190
+      uptoken_url: uptokenUrl,
+      max_retries: 3,
+      accept: '',
       init: {
         PostInit() {
           console.log(`初始化${id}`);
         },
+        Key(_, file){
+          const filaname = randomFileName(file);
+          return Promise.resolve(filaname);
+        },
         FilesAdded(_, fille) {
+          _this.setStatueState('fileAdded');
           uploader.start();
         },
-        UploadProgress() {
-
+        BeforeUpload() {
+          console.log('before uploaded');
         },
         FileUploaded(_, file, info) {
           const bucket = info.body.bucket;
           const object = info.body.object;
-          const uploadPath = `${data.host}/${bucket}/${object}`;
+          const uploadPath = `${bosEndPoint}/${bucket}/${object}`;
+          _this.setStatueState('success');
           success(uploadPath, file, info);
+        },
+        Error(_, error, file) {
+          if(error) {
+            _this.setStatueState('fail');
+            throw new Error(error);
+          }
         }
       }
     });
   }
 
-  componentDidMount = async () =>  {
-    const data = await this.getToken();
-    console.log(data);
-    this.createUploader(data);
+  /**
+   * 设置加载状态 showSuccess
+   */
+  setStatueState = (stack) => {
+    switch(stack) {
+    case 'fileAdded': 
+      this.setState({
+        show: true
+      });
+      break;
+    case 'success':
+      this.setState({
+        show: true,
+        status: true
+      });
+      this.delayHide(500);
+      break;
+    case 'fail':
+      this.setState({
+        show: false,
+        status: false
+      });
+      this.delayHide(500);
+      break;
+    default:
+      break;
+    }
   }
+
+  /**
+   * 延迟消失 showSuccess
+   * 默认 1000ms
+   */
+  delayHide = (delay = 1000) => {
+    setTimeout(() => {
+      this.setState({
+        show: false
+      });
+    }, delay);
+  }
+  
   render() {
-    const { children, id } = this.props;
+    const { children, id, showSuccess = true } = this.props;
     return (
       <div style={styles.uploaderWrap} id={id}>
         {
           children ? 
             children
             :
-            <div style={styles.innerBtn}>点击上传_bd</div>
+            <Button style={styles.innerBtn}>点击上传</Button>
         }
+        {
+          showSuccess ? 
+            <span style={
+              {
+                fontSize: '12px',
+                paddingLeft: '5px',
+                width: '100px'
+              }
+            }>
+              {
+                this.state.show ?
+                  <Spin
+                    indicator={
+                      <Icon
+                        type={
+                          this.state.status ? 'check': 'loading'}
+                        style={{ fontSize: 14 }} 
+                        spin={!this.state.status} />
+                    }
+                  />
+                  :
+                  null
+              }
+            </span>
+            :
+            null
+        }
+        
       </div>
     );
   }
