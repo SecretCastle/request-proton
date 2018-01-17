@@ -129,12 +129,15 @@ ReactDOM.render(
 **tips**:
 ```
 type属性说明
+
 填入的参数结构:
-    例如: [userid]-[app/product/account/ota]-[appid/productid]-[folder]-[file]
-    {
-        userid => 用户id，根据用户区分文件夹
-        app/product/account/ota => 四个类型的文件夹，当然喽，可以添加别的文件夹
-        appid/productid => appid或productid，用于区分不同app或者product，如果不涉及appid或productid可以忽略
-        folder => 区分上传文件的类别，如【image】，【bin】，【license】等
-    }
+
+例如: [userid]-[app/product/account/ota]-[appid/productid]-[folder]-[file]
+
+{
+    userid => 用户id，根据用户区分文件夹
+    app/product/account/ota => 四个类型的文件夹，当然喽，可以添加别的文件夹
+    appid/productid => appid或productid，用于区分不同app或者product，如果不涉及appid或productid可以忽略
+    folder => 区分上传文件的类别，如【image】，【bin】，【license】等
+}
 ```
