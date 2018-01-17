@@ -105,8 +105,8 @@ class Uploader extends PureComponent {
       id,
       success,
       bucket = 'fog-pub-front',
-      bosEndPoint = 'https://fog-pub-test.gz.bcebos.com',
-      uptokenUrl = 'https://cnapitest.fogcloud.io/gettoken/'
+      bosEndPoint = '',
+      uptokenUrl = ''
     } = this.props;
 
     const uploader = new BdUploader.bos.Uploader({

@@ -15,8 +15,8 @@ ReactDOM.render(
       id={'upload_bd_product'}
       success={uploaded}
       bucket={'fog-pub-front'}
-      bosEndPoint={'https://fog-pub-test.gz.bcebos.com'}
-      uptokenUrl={'https://cnapitest.fogcloud.io/gettoken/'}
+      bosEndPoint={''}
+      uptokenUrl={''}
       showSuccess={true}
     />
   </div>
