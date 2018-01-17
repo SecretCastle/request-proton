@@ -118,8 +118,8 @@ ReactDOM.render(
         id={'upload_bd_product'} // 这个uploader的id，唯一表示
         success={uploaded} // 上传成功返回的函数， 参数中 uploaded(filepath 上传路径, file 上传文件 ,info 上传成功后的信息)
         bucket={'fog-pub-front'} // 可选（默认参数中所填）， 上传到的bucket
-        bosEndPoint={'https://fog-pub-test.gz.bcebos.com'} // 可选（默认参数中所填）， 上传的服务器地址
-        uptokenUrl={'https://cnapitest.fogcloud.io/gettoken/'} // 可选（默认参数中所填）， 获取签名等信息的地址， 返回的是jsonp格式，需要后端直传
+        bosEndPoint={''} // 可选（默认参数中所填）， 上传的服务器地址
+        uptokenUrl={''} // 可选（默认参数中所填）， 获取签名等信息的地址， 返回的是jsonp格式，需要后端直传
         showSuccess={true}  // 可选， 是否显示上传加载和上传完成提示       
     />,
     document.getElementById('app')
