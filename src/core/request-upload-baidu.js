@@ -5,11 +5,9 @@ const BdUploader = require('bce-bos-uploader/bce-bos-uploader.bundle');
 
 import { req } from './request-proton';
 
-
 /**
  * 工具类方法
  */
-
 const randomFileName = (file) => {
   const filename = file.name;
   
@@ -22,17 +20,40 @@ const randomFileName = (file) => {
       nfn += filename.substr(i ,1).replace(pattern, ''); 
     }
   }
-  console.log(nfn);
   // 增加时间戳，防止上传的文件名重复
   const timestamp = new Date().getTime();
   // 获取 '.'最后出现的位置
   const lastIndex = nfn.lastIndexOf('.');
   // 拼接字符串
   const head = nfn.substr(0, lastIndex) + timestamp;
-  // 返回字符串
+  // 返回文件名字符串
   return `${head}${nfn.substr(lastIndex)}`;
 };
 
+/**
+ * 获取需要上传路径的前缀
+ */
+const prefixname = (type) => {
+  let prefixpath = '';
+  const typeArr = type.split('-');
+  for(let index = 0, len = typeArr.length; index < len ; index += 1){
+    prefixpath += `${typeArr[index]}/`;
+  }
+  return prefixpath;
+};
+
+/**
+ * 根据传入的type，把传入的文件归类
+ * @param {*} filename 文件名
+ * @param {*} type 类型
+ */
+const collectfiles = (filename, type) => {
+  if(!type){
+    return filename;
+  }
+  const prefix = prefixname(type);
+  return `${prefix}${filename}`;
+};
 
 const styles = {
   uploaderWrap: {
@@ -64,7 +85,6 @@ const styles = {
  * 基于bce-bos-uploader , 详情请看 https://github.com/leeight/bce-bos-uploader
  * 
  */
-
 class Uploader extends PureComponent {
   constructor(props) {
     super(props);
@@ -79,11 +99,12 @@ class Uploader extends PureComponent {
   }
 
   createUploader = () => {
+    const { type } = this.props;
     const _this = this;
     const { 
       id,
       success,
-      bucket = 'fog-pub-test',
+      bucket = 'fog-pub-front',
       bosEndPoint = 'https://fog-pub-test.gz.bcebos.com',
       uptokenUrl = 'https://cnapitest.fogcloud.io/gettoken/'
     } = this.props;
@@ -93,22 +114,21 @@ class Uploader extends PureComponent {
       bos_endpoint: bosEndPoint,
       browse_button: document.getElementById(id),
       uptoken_url: uptokenUrl,
-      max_retries: 3,
-      accept: '',
+      max_retries: 2,
+      auto_start: true,
+      bos_multipart_min_size: '20M',
       init: {
         PostInit() {
-          console.log(`初始化${id}`);
+          // 初始化
+          // console.log(`初始化${id}`);
         },
         Key(_, file){
           const filaname = randomFileName(file);
-          return Promise.resolve(filaname);
+          const collect = collectfiles(filaname, type);
+          return Promise.resolve(collect);
         },
         FilesAdded(_, fille) {
           _this.setStatueState('fileAdded');
-          uploader.start();
-        },
-        BeforeUpload() {
-          console.log('before uploaded');
         },
         FileUploaded(_, file, info) {
           const bucket = info.body.bucket;
@@ -118,10 +138,8 @@ class Uploader extends PureComponent {
           success(uploadPath, file, info);
         },
         Error(_, error, file) {
-          if(error) {
-            _this.setStatueState('fail');
-            throw new Error(error);
-          }
+          _this.setStatueState('fail');
+          throw new Error(error);
         }
       }
     });
@@ -134,7 +152,8 @@ class Uploader extends PureComponent {
     switch(stack) {
     case 'fileAdded': 
       this.setState({
-        show: true
+        show: true,
+        status: false
       });
       break;
     case 'success':
@@ -142,14 +161,14 @@ class Uploader extends PureComponent {
         show: true,
         status: true
       });
-      this.delayHide(500);
+      this.delayHide();
       break;
     case 'fail':
       this.setState({
         show: false,
         status: false
       });
-      this.delayHide(500);
+      this.delayHide();
       break;
     default:
       break;
@@ -213,7 +232,6 @@ class Uploader extends PureComponent {
 
 Uploader.propTypes = {
   id: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
   success: PropTypes.func.isRequired,
 };
 
