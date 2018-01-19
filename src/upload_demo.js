@@ -18,6 +18,7 @@ ReactDOM.render(
       bosEndPoint={''}
       uptokenUrl={''}
       showSuccess={true}
+      accept={''}
     />
   </div>
   ,

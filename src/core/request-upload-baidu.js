@@ -109,6 +109,8 @@ class Uploader extends PureComponent {
       uptokenUrl = 'https://cnapitest.fogcloud.io/get_bos_sign/'
     } = this.props;
 
+    // 这里需要增加可接受上传文件类型的配置
+    // 参数名称 accept
     const uploader = new BdUploader.bos.Uploader({
       bos_bucket: bucket,
       bos_endpoint: bosEndPoint,
