@@ -101,16 +101,24 @@ class Uploader extends PureComponent {
   createUploader = () => {
     const { type } = this.props;
     const _this = this;
+    let options = {};
     const { 
       id,
       success,
       bucket = 'fog-pub-front',
       bosEndPoint = 'https://fog-pub-test.gz.bcebos.com',
-      uptokenUrl = 'https://cnapitest.fogcloud.io/get_bos_sign/'
+      uptokenUrl = 'https://cnapitest.fogcloud.io/get_bos_sign/',
+      accept
     } = this.props;
 
-    // 这里需要增加可接受上传文件类型的配置
-    // 参数名称 accept
+    // 判断是否包含accept，包含的话，就输出新的一个配置
+    if (accept) {
+      options = {
+        accept,
+      };
+    }
+
+    // 实例化uploader
     const uploader = new BdUploader.bos.Uploader({
       bos_bucket: bucket,
       bos_endpoint: bosEndPoint,
@@ -119,6 +127,7 @@ class Uploader extends PureComponent {
       max_retries: 2,
       auto_start: true,
       bos_multipart_min_size: '20M',
+      ...options,
       init: {
         PostInit() {
           // 初始化
