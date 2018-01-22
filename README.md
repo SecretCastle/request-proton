@@ -115,12 +115,13 @@ import Uploader from '**/**/request-upload-baidu.js'
 ReactDOM.render(
     <Uploader 
         type={'app-appid-image'}
-        id={'upload_bd_product'} // 这个uploader的id，唯一表示
+        id={'upload_bd_product'} // 这个uploader的id，唯一标示
         success={uploaded} // 上传成功返回的函数， 参数中 uploaded(filepath 上传路径, file 上传文件 ,info 上传成功后的信息)
         bucket={'fog-pub-front'} // 可选（默认参数中所填）， 上传到的bucket
         bosEndPoint={''} // 可选（默认参数中所填）， 上传的服务器地址
         uptokenUrl={''} // 可选（默认参数中所填）， 获取签名等信息的地址， 返回的是jsonp格式，需要后端直传, 需要服务端认证TOKEN
-        showSuccess={true}  // 可选， 是否显示上传加载和上传完成提示       
+        showSuccess={true}  // 可选， 是否显示上传加载和上传完成提示
+        accept={'txt,png,jpg'} // 可选，文件上传的类型    
     />,
     document.getElementById('app')
 );
@@ -133,7 +134,7 @@ import Uploader from '**/**/request-upload-baidu.js';
 ReactDOM.render(
     <Uploader
         type={'app-appid-image'}
-        id={'upload_bd_product'} // 这个uploader的id，唯一表示
+        id={'upload_bd_product'} // 这个uploader的id，唯一标示
         success={uploaded} // 上传成功返回的函数， 参数中 uploaded(filepath 上传路径, file 上传文件 ,info 上传成功后的信息)
         bucket={'fog-pub-front'} // 可选（默认参数中所填）， 上传到的bucket
         bosEndPoint={''} // 可选（默认参数中所填）， 上传的服务器地址
