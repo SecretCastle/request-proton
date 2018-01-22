@@ -139,7 +139,7 @@ ReactDOM.render(
         bosEndPoint={''} // 可选（默认参数中所填）， 上传的服务器地址
         uptokenUrl={''} // 可选（默认参数中所填）， 获取签名等信息的地址， 返回的是jsonp格式，需要后端直传, 需要服务端认证TOKEN
         showSuccess={true}  // 可选， 是否显示上传加载和上传完成提示
-        accept={'.txt, .png, .jpg'} // 可选，文件上传的类型
+        accept={'txt,png,jpg'} // 可选，文件上传的类型
     >
         // 自定义的dom
     </Uploader>,
