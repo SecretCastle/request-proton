@@ -3,20 +3,21 @@ import { req, multiRequestWithPromise, multiRequest } from './core/request-proto
 localStorage.setItem('token', '111');
 
 // 单个请求
-req({ url: '/topics', method: 'get', param: {}, type: 'xxx' }).then(res => {
-  console.log(res);
-});
+// req({ url: '/topics', method: 'get', param: {}, type: 'xxx' }).then(res => {
+//   console.log(res);
+// });
 
-// // 多请求 1
-// multiRequestWithPromise([{
-//     url: '/topics'
-//   },
-//   {
-//     url: '/topics'
-//   }
-// ]).then(res => {
-//   console.log('多请求1', res);
-// })
+// 多请求 1
+multiRequestWithPromise([
+  {
+    url: '/topics'
+  },
+  {
+    url: '/topics'
+  }
+]).then(res => {
+  console.log('多请求1', res);
+});
 
 
 // // 多请求2
@@ -40,3 +41,20 @@ req({ url: '/topics', method: 'get', param: {}, type: 'xxx' }).then(res => {
 // }
 
 // fn1()
+
+
+// CancelToken
+
+
+// import axios from 'axios';
+// const CancelToken = axios.CancelToken;
+// let cancel;
+
+// axios.get('/user/12345', {
+//   cancelToken: new CancelToken(function executor(c) {
+//     // An executor function receives a cancel function as a parameter
+//     cancel = c;
+//   })
+// });
+
+// cancel('request cancel');

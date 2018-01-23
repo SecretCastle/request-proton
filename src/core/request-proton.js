@@ -1,7 +1,18 @@
 import axios from 'axios';
+
+const CancelToken = axios.CancelToken;
 const BASE_URL = 'https://cnodejs.org/api/v1';
 
+// 定义一个空的数组，用于存放请求中的参数
+let pending = [];
+
+// test api
 // https://cnodejs.org/api/v1/topics
+
+
+const removePending = (config) => {
+  console.log(pending);
+};
 
 //创建axios实例
 const axiosInstance = () => {
@@ -23,6 +34,13 @@ const reqmiddleware = (instance) => {
       config.headers = {
         Authorization: `token ${localStorage.getItem('token')}`
       };
+      config.cancelToken = new CancelToken((c) => {
+        pending.push({
+          url: config.url,
+          method: config.method,
+          cancel: c
+        });
+      });
     }
     return config;
   }, (err) => {
@@ -40,6 +58,7 @@ const resMiddleware = (instance) => {
     if (res.status !== 200) {
       throw new Error(res.statusText);
     }
+    removePending(res);
     return res;
   }, (err) => {
     if (err.response) {
@@ -67,7 +86,7 @@ const publicReq = async (params) => {
   return await instance({
     url: url,
     method: method || 'get',
-    data: param || {},
+    data: param || {}
   }).then(res => {
     if (res) {
       if (res.status !== 200) {
