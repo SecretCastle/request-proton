@@ -1,4 +1,4 @@
-# Request Document
+u# Request Document
 
 > `./src/core/request-upload-baidu.js` 基于[bce-bos-uploader](https://github.com/leeight/bce-bos-uploader)的OSS直传React组件
 

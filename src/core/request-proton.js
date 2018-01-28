@@ -34,14 +34,13 @@ const reqmiddleware = (instance) => {
       config.headers = {
         Authorization: `token ${localStorage.getItem('token')}`
       };
-      config.cancelToken = new CancelToken((c) => {
-        pending.push({
-          url: config.url,
-          method: config.method,
-          cancel: c
-        });
-      });
     }
+    config.cancelToken = new CancelToken((c) => {
+      pending.push({
+        url: config.url +'_'+ config.method,
+        fn: c
+      });
+    });
     return config;
   }, (err) => {
     throw new Error(err);
