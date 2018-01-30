@@ -2,6 +2,20 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import QRious from 'qrious';
 
+
+const DOWNLOAD_LOGO_WIDTH = 220;
+const DOWNLOAD_LOGO_HEIGHT = 220;
+const DOWNLOAD_QRCODE_SIZE = 1200;
+/**
+ * tool functions
+ */
+
+// 绘制圆角函数
+const drawRoundRect = () => {
+
+};
+
+
 /**
  * 支持可下载，可预览的QRCode组件
  *
@@ -48,8 +62,10 @@ class QRCode extends PureComponent {
       element: canvas,
       value: this.props.value,
       level: 'M',
-      size: 1200,
-      padding: 100,
+      size: DOWNLOAD_QRCODE_SIZE,
+      padding: null,
+      backgroundAlpha: 0.5,
+      background: '#f00',
     });
     if (this.props.logo) {
       this.drawLogoBig(canvas);
@@ -79,18 +95,18 @@ class QRCode extends PureComponent {
   drawLogoBig = (canvas) => {
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    const size = 1200;
+    const size = DOWNLOAD_QRCODE_SIZE;
     img.src = this.props.logo;
     img.crossOrigin = 'anonymous';
     img.onload = () => {
-      const dWidth = 228;
-      const dHeight = 228;
+      const dWidth = DOWNLOAD_LOGO_WIDTH;
+      const dHeight = DOWNLOAD_LOGO_HEIGHT;
       const px = (size - dWidth) / 2;
       const py = (size - dWidth) / 2;
       img.width = dWidth;
       img.height = dHeight;
       ctx.restore();
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 15;
       ctx.strokeStyle = '#ccc';
       ctx.strokeRect(px, py, dWidth, dHeight);
       ctx.drawImage(img, px, py, dWidth, dHeight);
@@ -102,7 +118,7 @@ class QRCode extends PureComponent {
     ctx.restore();
     ctx.font = '52px serif';
     ctx.textAlign = 'center';
-    ctx.fillText(this.props.appname, 600, 1160);
+    ctx.fillText(this.props.appname, 600, 1200);
   }
 
   // 下载支持
@@ -144,7 +160,7 @@ class QRCode extends PureComponent {
           }}
         />
         {
-          this.props.download ? <canvas ref={(downloadcvs) => { this.downloadcvs = downloadcvs; }} width="1200px" height="1200px" style={{ height: '1200px', width: '1200px', display: 'none' }} /> : null
+          this.props.download ? <canvas ref={(downloadcvs) => { this.downloadcvs = downloadcvs; }} style={{ height: '1300px', width: '1200px', padding: '0 0 100px 0' }} /> : null
         }
       </div>
     );
