@@ -1,4 +1,4 @@
-u# Request Document
+# Request Document
 
 > `./src/core/request-upload-baidu.js` 基于[bce-bos-uploader](https://github.com/leeight/bce-bos-uploader)的OSS直传React组件
 
@@ -163,4 +163,45 @@ type属性说明
     appid/productid => appid或productid，用于区分不同app或者product，如果不涉及appid或productid可以忽略
     folder => 区分上传文件的类别，如【image】，【bin】，【license】等
 }
+```
+
+### QRCode Component
+
+本组件提供下载和预览功能
+
+> path '/src/core/qrcode-proton';
+
+* 依赖
+    * [qrious](https://github.com/neocotic/qrious)
+
+#### 使用方法
+
+使用前
+```
+yarn add qrious --S
+```
+
+使用
+
+```
+const download = () => {
+    // 调用QRCode组件中的下载方法
+    this.clickdownload.downloadFile();
+}
+
+ReactDOM.render(
+    <div>
+    <Button type="primary" onClick={this.download}>点击下载</Button>
+    <QRCode
+      ref = { input => this.clickdownload = input }  // 绑定当前dom为this.clickdownload
+      size={150}  // 二维码尺寸
+      value={'https://app.fogcloud.io/xxxxxxx/xxxxxx'} // 二维码的值
+      logoSize={60} // logo显示尺寸
+      download={true} // 是否开启下载功能, 不开启，下载按钮无效
+      appname={'智能球泡灯 A5'}  // appname
+      logo={'https://fog-pub-test.gz.bcebos.com/fog-pub-front/18225864728/product/57adb732fc2111e7804bfa163e431402/productimg/BitmapCopy51516678162020.png'} // logo 如果此项没有，logoSize无效
+    />
+  </div>,
+  document.getElementById('app')
+)
 ```

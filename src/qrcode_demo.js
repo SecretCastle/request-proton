@@ -7,14 +7,14 @@ import QRCode from './core/qrcode-proton';
 
 class App extends PureComponent {
   download = () => {
-    this.refs.qrcode.downloadFile();
+    this.clickdownload.downloadFile();
   }
   render() {
     return (
       <div>
         <Button type="primary" onClick={this.download}>点击下载</Button>
         <QRCode
-          ref="qrcode"
+          ref = { input => this.clickdownload = input }
           size={150}
           value={'https://app.fogcloud.io/xxxxxxx/xxxxxx'}
           logoSize={60}

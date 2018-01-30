@@ -11,3 +11,5 @@ import 'babel-polyfill';
 // import './extra/purecomponents';
 
 import './qrcode_demo';
+
+// import './ref_demo';
