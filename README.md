@@ -7,6 +7,7 @@
 里面需要的是服务端支持，纯js的需要再一步细化，如获取加密签名, `accesskey`和`accessid`加密等
 
 > `./src/core/request-proton.js` 封装的请求文件，基于[axios](https://github.com/axios/axios)
+
 > `./src/core/qrcode-proton` qrcode react版本，支持下载高清大图（默认1500px，不支持修改）
 
  使用
