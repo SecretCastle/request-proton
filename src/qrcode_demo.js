@@ -7,7 +7,7 @@ import QRCodeExtra from './extra/qrcode_extra';
 
 class App extends PureComponent {
   download = () => {
-    this.clickdownload.downloadFile();
+    this.qrcode.downloadImgae();
   }
   render() {
     return (
@@ -22,7 +22,7 @@ class App extends PureComponent {
           appname={'智能球泡灯 A5'}
           logo={'https://fog-pub-test.gz.bcebos.com/fog-pub-front/18225864728/product/57adb732fc2111e7804bfa163e431402/productimg/BitmapCopy51516678162020.png'}
         /> */}
-        <QRCodeExtra />
+        <QRCodeExtra ref={(qrcode) => {this.qrcode = qrcode;}}/>
       </div>
     );
   }
