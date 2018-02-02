@@ -2,132 +2,137 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import QRious from 'qrious';
 
-
+/**
+ * 常量设置
+ */
+const DOWNLOAD_IMG_WIDTH = 1200;
+const DOWNLOAD_IMG_HEIGHT = 1380;
+const DOWNLOAD_QRCODE_SIZE = 1000;
 const DOWNLOAD_LOGO_WIDTH = 220;
 const DOWNLOAD_LOGO_HEIGHT = 220;
-const DOWNLOAD_QRCODE_SIZE = 1200;
-/**
- * tool functions
- */
 
-// 绘制圆角函数
-const drawRoundRect = () => {
-
-};
-
-
-/**
- * 支持可下载，可预览的QRCode组件
- *
- * 思路
- * 1、下载：传递一个dom node绑定click事件，当点击那个click的时候，下载图片
- * 2、预览：正常绘制canva预览图片
- */
 
 
 class QRCode extends PureComponent {
-  componentDidMount() {
-    this.load();
-    if (this.props.download) {
-      this.loadDownload();
-    }
+  componentDidMount () {
+    this.downloadQRCode();
+    this.showQRCode();
   }
 
-  componentDidUpdate() {
-    this.load();
-    if (this.props.download) {
-      this.loadDownload();
-    }
-  }
-
-  // 加载二维码
-  load = () => {
-    const canvas = this.showCanvas;
-    this.qrcode = new QRious({
-      element: canvas,
-      value: this.props.value,
-      level: 'M',
+  showQRCode = () => {
+    this.showqr = new QRious({
+      element: this.cvsdisplay,
+      value: this.props.value || 'https://github.com/SecretCastle',
       size: this.props.size,
+      level: this.props.level || 'M',
+      padding: 0
     });
-
-    if (this.props.logo) {
-      this.drawLogo(canvas);
-    }
+    this.drawIconDisplay();
   }
 
-  // 加载下载的二维码
-  loadDownload = () => {
-    const canvas = this.downloadcvs;
-    this.qrcode_big = new QRious({
-      element: canvas,
-      value: this.props.value,
-      level: 'M',
-      size: DOWNLOAD_QRCODE_SIZE,
-      padding: null,
-      backgroundAlpha: 0.5,
-      background: '#f00',
-    });
-    if (this.props.logo) {
-      this.drawLogoBig(canvas);
-      this.drawText(canvas);
-    }
-  }
-
-  // logo绘制
-  drawLogo = (canvas) => {
-    const ctx = canvas.getContext('2d');
+  drawIconDisplay = () => {
+    const ctx = this.cvsdisplay.getContext('2d');
     const img = new Image();
-    const size = this.props.size;
+    const size = this.props.size || 60;
     img.src = this.props.logo;
     img.crossOrigin = 'anonymous';
     img.onload = () => {
-      const dWidth = this.props.logoSize || size * 0.2;
-      const dHeight = this.props.logoSize || size * 0.2;
-      const px = (size - dWidth) / 2;
-      const py = (size - dWidth) / 2;
-      img.width = dWidth;
-      img.height = dHeight;
-      ctx.drawImage(img, px, py, dWidth, dHeight);
-    };
-  }
-
-  // 供下载的二维码logo绘制
-  drawLogoBig = (canvas) => {
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    const size = DOWNLOAD_QRCODE_SIZE;
-    img.src = this.props.logo;
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      const dWidth = DOWNLOAD_LOGO_WIDTH;
-      const dHeight = DOWNLOAD_LOGO_HEIGHT;
+      const dWidth = this.props.logoSize;
+      const dHeight = this.props.logoSize;
       const px = (size - dWidth) / 2;
       const py = (size - dWidth) / 2;
       img.width = dWidth;
       img.height = dHeight;
       ctx.restore();
-      ctx.lineWidth = 15;
-      ctx.strokeStyle = '#ccc';
-      ctx.strokeRect(px, py, dWidth, dHeight);
+      this.roundRect(ctx, px, py, dWidth, dHeight, 10);
+      ctx.clip();
       ctx.drawImage(img, px, py, dWidth, dHeight);
+      this.roundRect(ctx, px, py, dWidth, dWidth, 10, 'border');
     };
   }
 
-  drawText = (canvas) => {
-    const ctx = canvas.getContext('2d');
-    ctx.restore();
-    ctx.font = '52px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(this.props.appname, 600, 1200);
+  downloadQRCode = () => {
+    this.qr = new QRious({
+      element: this.cvsbase,
+      value: this.props.value || 'https://github.com/SecretCastle',
+      size: DOWNLOAD_QRCODE_SIZE,
+      level: this.props.level || 'M',
+      padding: 0,
+    });
+    this.drawShowCanvas();
+  }
+  // 绘制展示的canvas
+  drawShowCanvas = (flag) => {
+    const ctx = this.cvsshow.getContext('2d');
+    ctx.save();
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0 , DOWNLOAD_IMG_WIDTH, DOWNLOAD_IMG_HEIGHT);
+    this.qr.image.onload = () => {
+      ctx.drawImage(this.qr.image, 100, 100);
+    };
+    this.createText(ctx);
+    this.createIcon(ctx);
   }
 
-  // 下载支持
-  downloadFile = () => {
+  // 画圆角
+  roundRect = (ctx, x, y, w, h, r, type) => {
+    var min_size = Math.min(w, h);
+    if (r > min_size / 2) r = min_size / 2;
+    if (type) {
+      ctx.strokeStyle = '#ccc';
+      ctx.lineWidth = 15;
+    }
+    // 开始绘制
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+    if (type) {
+      ctx.stroke();
+    }
+  };
+
+  // 绘制文字
+  createText = (ctx) => {
+    ctx.restore();
+    ctx.font = '72px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(this.props.name || 'APP', 600, 1260);
+  }
+
+  // 绘制logo
+  createIcon = (ctx) => {
+    const img = new Image();
+    const size = DOWNLOAD_QRCODE_SIZE;
+    img.src = this.props.logo;
+    img.crossOrigin = 'anonymous';
+
+    img.onload = () => {
+      // draw circle
+      const dWidth = DOWNLOAD_LOGO_WIDTH;
+      const dHeight = DOWNLOAD_LOGO_HEIGHT;
+      const px = (size + 200 - dWidth) / 2;
+      const py = (size + 200 - dWidth) / 2;
+      img.width = dWidth;
+      img.height = dHeight;
+      ctx.restore();
+      this.roundRect(ctx, px, py, dWidth, dHeight, 48);
+      ctx.clip();
+      ctx.drawImage(img, px, py, dWidth, dHeight);
+      this.roundRect(ctx, px, py, dWidth, dWidth, 48, 'border');
+    };
+  }
+ 
+  // 内部下载方法
+  downloadImgae = () => {
     if (!this.props.download) {
       return false;
     }
     const aLink = document.createElement('a');
-    const blob = this.base64ToBlob(this.downloadcvs.toDataURL()); // new Blob([content]);
+    const blob = this.base64ToBlob(this.cvsshow.toDataURL()); // new Blob([content]);
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent('click', true, true); // initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
     aLink.download = `${new Date().getTime()}.png`;
@@ -148,33 +153,30 @@ class QRCode extends PureComponent {
   }
 
   render() {
-    return (
-      <div>
-        <canvas
-          ref={(canvasShow) => { this.showCanvas = canvasShow; }}
-          width={this.props.size}
-          height={this.props.size}
-          style={{
-            height: this.props.size,
-            width: this.props.size,
-          }}
-        />
-        {
-          this.props.download ? <canvas ref={(downloadcvs) => { this.downloadcvs = downloadcvs; }} style={{ height: '1300px', width: '1200px', padding: '0 0 100px 0' }} /> : null
-        }
+    return(
+      <div ref={(dom) => { this.domQRcode = dom; }}>
+        <canvas ref={ (cvsbase) => { this.cvsbase = cvsbase; } } style={{ display: 'none' }}/>
+        <canvas ref={ (cvsshow) => { this.cvsshow = cvsshow; }} width={DOWNLOAD_IMG_WIDTH} height={DOWNLOAD_IMG_HEIGHT} style={{ width: DOWNLOAD_IMG_WIDTH, height: DOWNLOAD_IMG_HEIGHT, background: '#fff', display: 'none' }}/>
+        <canvas ref={ (cvsdisplay) => { this.cvsdisplay = cvsdisplay; }} width={this.props.size} height={this.props.size} style={{ width: this.props.size, height: this.props.size }}/>
       </div>
     );
   }
 }
 
-QRCode.propTypes = {
-  size: PropTypes.number.isRequired,
+QRCode.propType = {
   value: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  logo: PropTypes.string.isRequired,
+  level: PropTypes.string.isRequired,
+  logoSize: PropTypes.number.isRequired,
 };
 
 QRCode.defaultProps = {
-  size: 1000,
-  value: 'hello world',
+  value: 'https://github.com/SecretCastle',
+  name: 'App',
+  logo: 'https://avatars0.githubusercontent.com/u/12498143?s=460&v=4',
+  level: 'M',
+  logoSize: 60
 };
 
 export default QRCode;

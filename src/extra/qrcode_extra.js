@@ -2,20 +2,24 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import QRious from 'qrious';
 
+/**
+ * 常量设置
+ */
 const DOWNLOAD_IMG_WIDTH = 1200;
 const DOWNLOAD_IMG_HEIGHT = 1380;
 const DOWNLOAD_QRCODE_SIZE = 1000;
 const DOWNLOAD_LOGO_WIDTH = 220;
-const DOWNLOAD_LOGO_HEIGHT = 200;
+const DOWNLOAD_LOGO_HEIGHT = 220;
+
+
 
 class QRCodeExtra extends PureComponent {
   componentDidMount () {
-    console.log(this.cvsbase);
     this.qr = new QRious({
       element: this.cvsbase,
-      value: 'http://www.baidu.com',
+      value: this.props.value || 'https://github.com/SecretCastle',
       size: DOWNLOAD_QRCODE_SIZE,
-      level: 'M',
+      level: this.props.level || 'M',
       padding: 0,
     });
     this.drawShowCanvas();
@@ -33,11 +37,33 @@ class QRCodeExtra extends PureComponent {
     this.createIcon(ctx);
   }
 
+  // 画圆角
+  roundRect = (ctx, x, y, w, h, r, type) => {
+    var min_size = Math.min(w, h);
+    if (r > min_size / 2) r = min_size / 2;
+    if (type) {
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 15;
+    }
+    // 开始绘制
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+    if (type) {
+      ctx.stroke();
+    }
+  };
+
+
   createText = (ctx) => {
     ctx.restore();
     ctx.font = '72px serif';
     ctx.textAlign = 'center';
-    ctx.fillText('智能球泡灯 A5', 600, 1260);
+    ctx.fillText(this.props.name || 'APP', 600, 1260);
   }
 
   createIcon = (ctx) => {
@@ -45,7 +71,9 @@ class QRCodeExtra extends PureComponent {
     const size = DOWNLOAD_QRCODE_SIZE;
     img.src = 'https://fog-pub-test.gz.bcebos.com/fog-pub-front/18225864728/product/57adb732fc2111e7804bfa163e431402/productimg/BitmapCopy51516678162020.png';
     img.crossOrigin = 'anonymous';
+
     img.onload = () => {
+      // draw circle
       const dWidth = DOWNLOAD_LOGO_WIDTH;
       const dHeight = DOWNLOAD_LOGO_HEIGHT;
       const px = (size + 200 - dWidth) / 2;
@@ -53,10 +81,10 @@ class QRCodeExtra extends PureComponent {
       img.width = dWidth;
       img.height = dHeight;
       ctx.restore();
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = '#ccc';
-      ctx.strokeRect(px, py, dWidth, dHeight);
+      this.roundRect(ctx, px, py, dWidth, dHeight, 48);
+      ctx.clip();
       ctx.drawImage(img, px, py, dWidth, dHeight);
+      this.roundRect(ctx, px, py, dWidth, dWidth, 48, 'border');
     };
   }
 
@@ -87,7 +115,7 @@ class QRCodeExtra extends PureComponent {
       <div ref={(dom) => { this.domQRcode = dom; }}>
         <canvas ref={ (cvsbase) => { this.cvsbase = cvsbase; } } style={{ display: 'none' }}/>
         <canvas ref={ (cvsshow) => { this.cvsshow = cvsshow; }} width={DOWNLOAD_IMG_WIDTH} height={DOWNLOAD_IMG_HEIGHT} style={{ width: DOWNLOAD_IMG_WIDTH, height: DOWNLOAD_IMG_HEIGHT, background: '#fff' }}/>
-        <canvas ref={ (cvsdisplay) => {this.cvsdisplay = cvsdisplay;}} />
+        <canvas ref={ (cvsdisplay) => { this.cvsdisplay = cvsdisplay; }} />
       </div>
     );
   }
