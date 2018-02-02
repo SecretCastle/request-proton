@@ -200,7 +200,7 @@ ReactDOM.render(
       value={'https://app.fogcloud.io/xxxxxxx/xxxxxx'} // 二维码的值
       logoSize={60} // logo显示尺寸
       download={true} // 是否开启下载功能, 不开启，下载按钮无效
-      appname={'智能球泡灯 A5'}  // appname
+      name={'智能球泡灯 A5'}  // name
       logo={'https://fog-pub-test.gz.bcebos.com/fog-pub-front/18225864728/product/57adb732fc2111e7804bfa163e431402/productimg/BitmapCopy51516678162020.png'} // logo 如果此项没有，logoSize无效
     />
   </div>,
