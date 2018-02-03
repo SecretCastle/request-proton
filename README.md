@@ -210,4 +210,8 @@ ReactDOM.render(
 
 方法 
 
+```
+this.clickdownload.downloadImgae() // 下载二维码
+this.clickdownload.reload() // 刷新二维码
+```
 
