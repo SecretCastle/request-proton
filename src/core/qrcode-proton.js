@@ -175,7 +175,7 @@ class QRCode extends PureComponent {
     return(
       <div ref={(dom) => { this.domQRcode = dom; }}>
         <canvas ref={ (cvsbase) => { this.cvsbase = cvsbase; } } style={{ display: 'none' }}/>
-        <canvas ref={ (cvsshow) => { this.cvsshow = cvsshow; }} width={DOWNLOAD_IMG_WIDTH} height={DOWNLOAD_IMG_HEIGHT} style={{ width: DOWNLOAD_IMG_WIDTH, height: DOWNLOAD_IMG_HEIGHT, background: '#fff' }}/>
+        <canvas ref={ (cvsshow) => { this.cvsshow = cvsshow; }} width={DOWNLOAD_IMG_WIDTH} height={DOWNLOAD_IMG_HEIGHT} style={{ width: DOWNLOAD_IMG_WIDTH, height: DOWNLOAD_IMG_HEIGHT, background: '#fff', display: 'none' }}/>
         <canvas ref={ (cvsdisplay) => { this.cvsdisplay = cvsdisplay; }} width={this.props.size} height={this.props.size} style={{ width: this.props.size, height: this.props.size }}/>
       </div>
     );
