@@ -14,7 +14,13 @@ const DOWNLOAD_LOGO_HEIGHT = 220;
 
 
 class QRCode extends PureComponent {
-  componentDidMount () {
+  componentDidMount() {
+    this.downloadQRCode();
+    this.showQRCode();
+  }
+
+  componentDidUpdate() {
+    this.clearCVSShow();
     this.downloadQRCode();
     this.showQRCode();
   }
@@ -61,17 +67,23 @@ class QRCode extends PureComponent {
     });
     this.drawShowCanvas();
   }
+
   // 绘制展示的canvas
-  drawShowCanvas = (flag) => {
+  drawShowCanvas = () => {
     const ctx = this.cvsshow.getContext('2d');
     ctx.save();
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0 , DOWNLOAD_IMG_WIDTH, DOWNLOAD_IMG_HEIGHT);
     this.qr.image.onload = () => {
-      ctx.drawImage(this.qr.image, 100, 100);
+      ctx.drawImage(this.qr.image, 100, 100, DOWNLOAD_QRCODE_SIZE, DOWNLOAD_QRCODE_SIZE);
     };
     this.createText(ctx);
     this.createIcon(ctx);
+  }
+
+  clearCVSShow = () => {
+    const ctx = this.cvsshow.getContext('2d');
+    ctx.clearRect(0, 0, DOWNLOAD_IMG_WIDTH, DOWNLOAD_IMG_HEIGHT);
   }
 
   // 画圆角
@@ -80,7 +92,7 @@ class QRCode extends PureComponent {
     if (r > min_size / 2) r = min_size / 2;
     if (type) {
       ctx.strokeStyle = '#ccc';
-      ctx.lineWidth = 15;
+      ctx.lineWidth = 10;
     }
     // 开始绘制
     ctx.beginPath();
@@ -120,7 +132,7 @@ class QRCode extends PureComponent {
       img.height = dHeight;
       ctx.restore();
       this.roundRect(ctx, px, py, dWidth, dHeight, 48);
-      ctx.clip();
+      // ctx.clip();
       ctx.drawImage(img, px, py, dWidth, dHeight);
       this.roundRect(ctx, px, py, dWidth, dWidth, 48, 'border');
     };
@@ -152,11 +164,18 @@ class QRCode extends PureComponent {
     return new Blob([uInt8Array], { type: contentType });
   }
 
+  // 刷新二维码
+  reload = () => {
+    this.clearCVSShow();
+    this.downloadQRCode();
+    this.showQRCode();
+  }
+
   render() {
     return(
       <div ref={(dom) => { this.domQRcode = dom; }}>
         <canvas ref={ (cvsbase) => { this.cvsbase = cvsbase; } } style={{ display: 'none' }}/>
-        <canvas ref={ (cvsshow) => { this.cvsshow = cvsshow; }} width={DOWNLOAD_IMG_WIDTH} height={DOWNLOAD_IMG_HEIGHT} style={{ width: DOWNLOAD_IMG_WIDTH, height: DOWNLOAD_IMG_HEIGHT, background: '#fff', display: 'none' }}/>
+        <canvas ref={ (cvsshow) => { this.cvsshow = cvsshow; }} width={DOWNLOAD_IMG_WIDTH} height={DOWNLOAD_IMG_HEIGHT} style={{ width: DOWNLOAD_IMG_WIDTH, height: DOWNLOAD_IMG_HEIGHT, background: '#fff' }}/>
         <canvas ref={ (cvsdisplay) => { this.cvsdisplay = cvsdisplay; }} width={this.props.size} height={this.props.size} style={{ width: this.props.size, height: this.props.size }}/>
       </div>
     );

@@ -207,3 +207,7 @@ ReactDOM.render(
   document.getElementById('app')
 )
 ```
+
+方法 
+
+
