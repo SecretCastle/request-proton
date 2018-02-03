@@ -30,8 +30,7 @@ class QRCode extends PureComponent {
       element: this.cvsdisplay,
       value: this.props.value || 'https://github.com/SecretCastle',
       size: this.props.size,
-      level: this.props.level || 'M',
-      padding: 0
+      level: this.props.level || 'M'
     });
     this.drawIconDisplay();
   }
