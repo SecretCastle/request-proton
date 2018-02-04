@@ -167,6 +167,10 @@ type属性说明
 }
 ```
 
+**IMPORTANT**
+
+组件在`DidMount`时开始实例化Uploader对象，所以，为了保证有且仅有一次实例化，loading为false后加载子组件
+
 ### QRCode Component
 
 本组件提供下载和预览功能
