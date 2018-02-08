@@ -8,7 +8,7 @@ const BASE_URL = 'https://cnodejs.org/api/v1';
 // https://cnodejs.org/api/v1/topics
 
 
-//创建axios实例
+// 创建axios实例
 const axiosInstance = () => {
   const instance = axios.create({
     baseURL: BASE_URL,
@@ -18,7 +18,7 @@ const axiosInstance = () => {
 };
 
 /**
- * 
+ *
  * axios 请求的中间件,可根据需求，修改header
  * @param {Object} instance axios实例
  */
@@ -36,7 +36,7 @@ const reqmiddleware = (instance) => {
 };
 
 /**
- * 
+ *
  * axios 请求成功后响应的中间件
  * @param {Object} instance axios实例
  */
@@ -45,7 +45,7 @@ const resMiddleware = (instance) => {
     if (res.status !== 200) {
       throw new Error(res.statusText);
     }
-    removePending(res);
+    // removePending(res);
     return res;
   }, (err) => {
     if (err.response) {
@@ -64,7 +64,7 @@ const resMiddleware = (instance) => {
   });
 };
 
-//请求实例
+// 请求实例
 const publicReq = async (params) => {
   const { url, method, param } = params;
   const instance = axiosInstance();
@@ -104,7 +104,7 @@ export async function req(params, delay = 10000) {
 }
 
 
-// 多请求 async loop 
+// 多请求 async loop
 export async function multiRequest(reqArr) {
   let res = [];
   if (typeof reqArr !== 'object' && !(reqArr instanceof Array)) {
@@ -133,7 +133,7 @@ export async function multiRequest(reqArr) {
   }
 }
 
-// 多请求 promise 
+// 多请求 promise
 export async function multiRequestWithPromise(reqArr) {
   if (typeof reqArr !== 'object' && !(reqArr instanceof Array)) {
     throw new Error(`please set ${reqArr} to Array`);
@@ -152,3 +152,13 @@ export async function multiRequestWithPromise(reqArr) {
     throw new Error(error);
   }
 }
+
+
+
+/**
+ * 
+ * 思路: 请求处理，当请求失败后，重新请求一次。
+ * 
+ */
+
+ 

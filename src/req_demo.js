@@ -1,7 +1,5 @@
 import { req, multiRequestWithPromise, multiRequest } from './core/request-proton.js';
 
-localStorage.setItem('token', '111');
-
 // 单个请求
 // req({ url: '/topics', method: 'get', param: {}, type: 'xxx' }).then(res => {
 //   console.log(res);
