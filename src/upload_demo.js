@@ -18,7 +18,7 @@ ReactDOM.render(
       bosEndPoint={''}
       uptokenUrl={''}
       showSuccess={true}
-      accept={'bin,png'}
+      accept={'.bin'}
     />
   </div>
   ,

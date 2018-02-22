@@ -10,14 +10,14 @@ import { req } from './request-proton';
  */
 const randomFileName = (file) => {
   const filename = file.name;
-  
+
   // 校验字符串中是否存在特殊字符的正则表达式
   const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\]<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
   let nfn = '';
   for(let i = 0 ; i < filename.length; i++ ){
     // 如果这一位是空格，则忽略
     if(filename.substr(i, 1)!== ' '){
-      nfn += filename.substr(i ,1).replace(pattern, ''); 
+      nfn += filename.substr(i ,1).replace(pattern, '');
     }
   }
   // 增加时间戳，防止上传的文件名重复
@@ -78,12 +78,12 @@ const styles = {
   }
 };
 
-/** 
- * 
+/**
+ *
  * 百度云 OSS直传， React版本
- * 
+ *
  * 基于bce-bos-uploader , 详情请看 https://github.com/leeight/bce-bos-uploader
- * 
+ *
  */
 class Uploader extends PureComponent {
   constructor(props) {
@@ -102,7 +102,7 @@ class Uploader extends PureComponent {
     const { type } = this.props;
     const _this = this;
     let options = {};
-    const { 
+    const {
       id,
       success,
       bucket = 'fog-pub-front',
@@ -161,7 +161,7 @@ class Uploader extends PureComponent {
    */
   setStatueState = (stack) => {
     switch(stack) {
-    case 'fileAdded': 
+    case 'fileAdded':
       this.setState({
         show: true,
         status: false
@@ -197,19 +197,19 @@ class Uploader extends PureComponent {
       });
     }, delay);
   }
-  
+
   render() {
     const { children, id, showSuccess = true } = this.props;
     return (
       <div style={styles.uploaderWrap} id={id}>
         {
-          children ? 
+          children ?
             children
             :
             <Button style={styles.innerBtn}>点击上传</Button>
         }
         {
-          showSuccess ? 
+          showSuccess ?
             <span style={
               {
                 fontSize: '12px',
@@ -224,7 +224,7 @@ class Uploader extends PureComponent {
                       <Icon
                         type={
                           this.state.status ? 'check': 'loading'}
-                        style={{ fontSize: 14 }} 
+                        style={{ fontSize: 14 }}
                         spin={!this.state.status} />
                     }
                   />
@@ -235,7 +235,7 @@ class Uploader extends PureComponent {
             :
             null
         }
-        
+
       </div>
     );
   }

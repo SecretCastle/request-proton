@@ -6,12 +6,11 @@ const App = () => {
   return (
     <div>
       <RefTest />
-
     </div>
-  )
-}
+  );
+};
 
 ReactDOM.render(
   <App />,
   document.getElementById('app')
-)
+);
