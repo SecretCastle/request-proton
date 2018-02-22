@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Spin, Icon, Button } from 'antd';
+import { Spin, Icon, Button, message } from 'antd';
 const BdUploader = require('bce-bos-uploader/bce-bos-uploader.bundle');
 
 import { req } from './request-proton';
@@ -98,9 +98,39 @@ class Uploader extends PureComponent {
     this.createUploader();
   }
 
+  macOS_filter = (files) => {
+    const { accept } = this.props;
+    const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+    if (!isSafari) {
+      return files;
+    }
+
+    // 检查文件的后缀是否符合accept传入的
+    const checkSuffix = (filename) => {
+      const nameArray = filename.split('.');
+      const lastSuffix = nameArray[nameArray.length - 1];
+      const targetSuffix = accept.split('.').filter(i => i)[0];
+      if (lastSuffix !== targetSuffix) {
+        message.error(`请传入 ${targetSuffix} 为后缀的文件`);
+        return false;
+      }
+      return true;
+    };
+
+    const result = files.some((file) => {
+      const filename = file.name;
+      return checkSuffix(filename);
+    });
+    
+    if (result) {
+      return files;
+    }
+  }
+
   createUploader = () => {
     const { type } = this.props;
     const _this = this;
+    const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
     let options = {};
     const {
       id,
@@ -113,9 +143,11 @@ class Uploader extends PureComponent {
 
     // 判断是否包含accept，包含的话，就输出新的一个配置
     if (accept) {
-      options = {
-        accept,
-      };
+      if (!isSafari) {
+        options = {
+          accept,
+        };
+      }
     }
 
     // 实例化uploader
@@ -140,6 +172,23 @@ class Uploader extends PureComponent {
         },
         FilesAdded(_, fille) {
           _this.setStatueState('fileAdded');
+        },
+        FilesFilter(_, files) {
+          const nFiles = _this.macOS_filter(files);
+          if (Array.isArray) {
+            if (Array.isArray(nFiles)) {
+              return nFiles;
+            } else {
+              return [];
+            }
+          } else {
+            if (Object.prototype.toString.call(nFiles) === '[object Array]') {
+              return nFiles;
+            } else {
+              return [];
+            }
+          }
+          // return nFiles;
         },
         FileUploaded(_, file, info) {
           const bucket = info.body.bucket;
