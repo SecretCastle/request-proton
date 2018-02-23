@@ -166,11 +166,13 @@ class Uploader extends PureComponent {
           // console.log(`初始化${id}`);
         },
         Key(_, file){
+          console.log('files keys');          
           const filaname = randomFileName(file);
           const collect = collectfiles(filaname, type);
           return Promise.resolve(collect);
         },
         FilesAdded(_, fille) {
+          console.log('files added');
           _this.setStatueState('fileAdded');
         },
         FilesFilter(_, files) {
@@ -196,6 +198,9 @@ class Uploader extends PureComponent {
           const uploadPath = `${bosEndPoint}/${bucket}/${object}`;
           _this.setStatueState('success');
           success(uploadPath, file, info);
+        },
+        UploadComplete(_, dom) {
+          console.log('dom', dom);
         },
         Error(_, error, file) {
           _this.setStatueState('fail');
@@ -249,6 +254,7 @@ class Uploader extends PureComponent {
 
   render() {
     const { children, id, showSuccess = true } = this.props;
+    console.log('refresh');
     return (
       <div style={styles.uploaderWrap} id={id}>
         {

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import AliUploader from './core/request-upload-ali';
 import BaiduUplaoder from './core/request-upload-baidu';
 
-
 const uploaded = (filepath, file, info) => {
   console.log(filepath);
 };
@@ -18,7 +17,6 @@ ReactDOM.render(
       bosEndPoint={''}
       uptokenUrl={''}
       showSuccess={true}
-      accept={'.bin'}
     />
   </div>
   ,
