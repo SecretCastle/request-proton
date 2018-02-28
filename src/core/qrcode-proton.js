@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import QRious from 'qrious';
+import { Spin } from 'antd';
 
 /**
  * 常量设置
@@ -14,6 +15,10 @@ const DOWNLOAD_LOGO_HEIGHT = 220;
 
 
 class QRCode extends PureComponent {
+  state = {
+    loading: true,
+  }
+
   componentDidMount() {
     this.downloadQRCode();
     this.showQRCode();
@@ -42,6 +47,9 @@ class QRCode extends PureComponent {
     img.src = this.props.logo;
     img.crossOrigin = 'anonymous';
     img.onload = () => {
+      this.setState({
+        loading: false
+      });
       const dWidth = this.props.logoSize;
       const dHeight = this.props.logoSize;
       const px = (size - dWidth) / 2;
@@ -49,8 +57,10 @@ class QRCode extends PureComponent {
       img.width = dWidth;
       img.height = dHeight;
       ctx.restore();
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(px, py, dWidth, dHeight);
       this.roundRect(ctx, px, py, dWidth, dHeight, 10);
-      ctx.clip();
+      // ctx.clip();
       ctx.drawImage(img, px, py, dWidth, dHeight);
       this.roundRect(ctx, px, py, dWidth, dWidth, 10, 'border');
     };
@@ -91,7 +101,7 @@ class QRCode extends PureComponent {
     if (r > min_size / 2) r = min_size / 2;
     if (type) {
       ctx.strokeStyle = '#ccc';
-      ctx.lineWidth = 10;
+      ctx.lineWidth = 5;
     }
     // 开始绘制
     ctx.beginPath();
@@ -165,17 +175,24 @@ class QRCode extends PureComponent {
 
   // 刷新二维码
   reload = () => {
+    this.setState({
+      loading: true,
+    });
     this.clearCVSShow();
     this.downloadQRCode();
     this.showQRCode();
   }
 
   render() {
+    console.log(this.state.loading);
     return(
-      <div ref={(dom) => { this.domQRcode = dom; }}>
-        <canvas ref={ (cvsbase) => { this.cvsbase = cvsbase; } } style={{ display: 'none' }}/>
-        <canvas ref={ (cvsshow) => { this.cvsshow = cvsshow; }} width={DOWNLOAD_IMG_WIDTH} height={DOWNLOAD_IMG_HEIGHT} style={{ width: DOWNLOAD_IMG_WIDTH, height: DOWNLOAD_IMG_HEIGHT, background: '#fff', display: 'none' }}/>
-        <canvas ref={ (cvsdisplay) => { this.cvsdisplay = cvsdisplay; }} width={this.props.size} height={this.props.size} style={{ width: this.props.size, height: this.props.size }}/>
+      <div ref={(dom) => { this.domQRcode = dom; }} style={{ position: 'relative',  width: this.props.size, height: this.props.size  }}>
+        <Spin style={{ position: 'absolute', top: '50%', left: '50%', zIndex: 999, transform: 'translate3d(-50%, -50%, 0)', display: this.state.loading ? 'block' : 'none' }} size={'large'}/>
+        <div style={{ opacity: this.state.loading ? 0.5 : 1 }}>
+          <canvas ref={ (cvsbase) => { this.cvsbase = cvsbase; } } style={{ display: 'none' }}/>
+          <canvas ref={ (cvsshow) => { this.cvsshow = cvsshow; }} width={DOWNLOAD_IMG_WIDTH} height={DOWNLOAD_IMG_HEIGHT} style={{ width: DOWNLOAD_IMG_WIDTH, height: DOWNLOAD_IMG_HEIGHT, background: '#fff', display: 'none' }}/>
+          <canvas ref={ (cvsdisplay) => { this.cvsdisplay = cvsdisplay; }} width={this.props.size} height={this.props.size} style={{ width: this.props.size, height: this.props.size }}/>
+        </div>
       </div>
     );
   }
