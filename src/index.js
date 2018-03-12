@@ -8,7 +8,7 @@ import 'babel-polyfill';
  */
 
 // react test
-// import './upload_demo';
+import './upload_demo';
 
 // request test
 // import './req_demo';
@@ -16,7 +16,7 @@ import 'babel-polyfill';
 // PureComponent Test
 // import './extra/purecomponents';
 
-import './qrcode_demo';
+// import './qrcode_demo';
 
 // import './ref_demo';
 
