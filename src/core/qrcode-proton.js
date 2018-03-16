@@ -45,7 +45,8 @@ class QRCode extends PureComponent {
     const img = new Image();
     const size = this.props.size || 60;
     img.src = this.props.logo;
-    img.crossOrigin = 'anonymous';
+    // img.crossOrigin = 'anonymous';
+    img.setAttribute('crossOrigin', 'anonymous');
     img.onload = () => {
       this.setState({
         loading: false
@@ -129,8 +130,8 @@ class QRCode extends PureComponent {
     const img = new Image();
     const size = DOWNLOAD_QRCODE_SIZE;
     img.src = this.props.logo;
-    img.crossOrigin = 'anonymous';
-
+    // img.crossOrigin = 'anonymous';
+    img.setAttribute('crossOrigin', 'anonymous');
     img.onload = () => {
       // draw circle
       const dWidth = DOWNLOAD_LOGO_WIDTH;
