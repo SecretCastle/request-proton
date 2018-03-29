@@ -129,7 +129,6 @@ class QRCode extends PureComponent {
   createIcon = (ctx) => {
     const img = new Image();
     const size = DOWNLOAD_QRCODE_SIZE;
-    img.src = this.props.logo;
     // img.crossOrigin = 'anonymous';
     img.setAttribute('crossOrigin', 'anonymous');
     img.onload = () => {
@@ -141,11 +140,12 @@ class QRCode extends PureComponent {
       img.width = dWidth;
       img.height = dHeight;
       ctx.restore();
-      this.roundRect(ctx, px, py, dWidth, dHeight, 48);
+      this.roundRect(ctx, px, py, dWidth, dHeight, 10);
       // ctx.clip();
       ctx.drawImage(img, px, py, dWidth, dHeight);
-      this.roundRect(ctx, px, py, dWidth, dWidth, 48, 'border');
+      this.roundRect(ctx, px, py, dWidth, dWidth, 10, 'border');
     };
+    img.src = this.props.logo;
   }
  
   // 内部下载方法

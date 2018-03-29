@@ -4,6 +4,7 @@ import { Button, Icon } from 'antd';
 import QRCode from './core/qrcode-proton';
 import QRCodeExtra from './extra/qrcode_extra';
 import CVSDemo from './extra/canvas_extra';
+import QrcodeOpt from './core/qrcode-proton-opt';
 
 class App extends PureComponent {
   state = {
@@ -35,8 +36,9 @@ class App extends PureComponent {
           download={true}
           name={this.state.name}
           value={this.state.value}
-          logo={'https://avatars0.githubusercontent.com/u/12498143?s=460&v=4'}
+          logo={'https://fog-pub-test.gz.bcebos.com/fog-pub-front/18225864728/app/b6fcedca1dfa11e8804bfa163e431402/image/3c28af542f2d49f7-44af7693092324ab-869d2323859c3b4f0635ae36154fd44d1520230202929.jpg'}
         />
+        <QrcodeOpt />
       </div>
     );
   }
