@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
 import Qrious from 'qrious';
+import React, { Component } from 'react';
 
-const paintUtil = {
+const tools = {
+  QrCodeCoreSize: 1300,
+  QrCodeIcon: 200,
   base64ToBlob(code) {
     const parts = code.split(';base64,');
     const contentType = parts[0].split(':')[1];
@@ -13,8 +15,6 @@ const paintUtil = {
     }
     return new Blob([uInt8Array], { type: contentType });
   },
-  qrcodeSize: 1300,
-  iconSize: 200,
   roundRect(ctx, x, y, w, h, r, type) {
     var min_size = Math.min(w, h);
     if (r > min_size / 2) r = min_size / 2;
@@ -34,88 +34,115 @@ const paintUtil = {
       ctx.stroke();
     }
   },
-  createImage(blob) {
-    const img = new Image();
-    img.src = blob;
-    img.onload = () => {
-      return img;
-    };
-    return img;
-  }
 };
 
-class QrcodeOpt extends Component {
+class QrcodeOptimize extends Component {
+  state = {
+    logo: ''
+  }
   componentDidMount() {
-    this.qrious = new Qrious({ element: this.CoreCVS });
-    this.ctx = this.CoreCVS.getContext('2d');
-    this.ctx.save();
-    this.createQrCode();
+    this.createQrcode();
+    this.createMiniQrcode();
   }
 
-  /**
-   *  初始化二维码
-   */
-  createQrCode() {
-    this.qrious.padding = 50;
-    this.qrious.size = paintUtil.qrcodeSize;
-    this.qrious.level = 'M';
-    this.createIcon();
-  }
-
-  createIcon() {
-    const imgIcon = new Image();
-    imgIcon.src = 'https://fog-pub-test.gz.bcebos.com/fog-pub-front/18225864728/app/b6fcedca1dfa11e8804bfa163e431402/image/3c28af542f2d49f7-44af7693092324ab-869d2323859c3b4f0635ae36154fd44d1520230202929.jpg';
-    imgIcon.setAttribute('crossOrigin', 'Anonymous');
-    imgIcon.onload = () => {
-      this.ctx.drawImage(
-        imgIcon,
-        (paintUtil.qrcodeSize - paintUtil.iconSize) / 2,
-        (paintUtil.qrcodeSize - paintUtil.iconSize) / 2,
-        paintUtil.iconSize, paintUtil.iconSize
-      );
-      const dWidth = paintUtil.iconSize;
-      const dHeight = paintUtil.iconSize;
-      const px = (paintUtil.qrcodeSize - dWidth) / 2;
-      const py = (paintUtil.qrcodeSize - dWidth) / 2;
-      paintUtil.roundRect(this.ctx, px, py, dWidth, dHeight, 10, 'border');
-      this.downLoadQrcode();
+  createQrcode() {
+    const { logo } = this.props;
+    let CoreDataURL;
+    let CoreImgURL;
+    const ctx = this.Core.getContext('2d');
+    ctx.save();
+    this.qriousCore = new Qrious({ element: this.Core });
+    this.qriousCore.size = tools.QrCodeCoreSize;
+    this.qriousCore.padding = 40;
+    CoreDataURL = this.Core.toDataURL();
+    this.clearCanvas(ctx, tools.QrCodeCoreSize, tools.QrCodeCoreSize);
+    this.qriousCore.size = tools.QrCodeIcon;
+    this.qriousCore.padding = 0;
+    const img = new Image();
+    img.src = logo;
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, tools.QrCodeIcon, tools.QrCodeIcon);
+      CoreImgURL = this.Core.toDataURL();
+      this.drawImg([CoreDataURL, CoreImgURL], ctx, this.qriousCore);
     };
   }
 
-  downLoadQrcode() {
+  drawImg(data, context, qriousInstance) {
+    const len = data.length;
+    this.clearCanvas(context, tools.QrCodeCoreSize, tools.QrCodeCoreSize);
+    this.Core.width = tools.QrCodeCoreSize;
+    this.Core.height = tools.QrCodeCoreSize + tools.QrCodeIcon;
+    for (let index = 0; index < len; index++) {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = data[index];
+      img.onload = () => {
+        context.drawImage(
+          img,
+          index === 0
+            ? 0
+            : (tools.QrCodeCoreSize - tools.QrCodeIcon) / 2,
+          index === 0
+            ? 0
+            : (tools.QrCodeCoreSize - tools.QrCodeIcon) / 2,
+          index === 0
+            ? tools.QrCodeCoreSize
+            : tools.QrCodeIcon,
+          index === 0
+            ? tools.QrCodeCoreSize
+            : tools.QrCodeIcon
+        );
+        tools.roundRect(
+          context,
+          (tools.QrCodeCoreSize - tools.QrCodeIcon) / 2,
+          (tools.QrCodeCoreSize - tools.QrCodeIcon) / 2,
+          200,
+          200,
+          15,
+          'border'
+        );
+      };
+    }
+  }
+  
+  clearCanvas(context, width, height) {
+    context.clearRect(0, 0, width, height);
+  }
+
+  downloadQrCode() {
     const aLink = document.createElement('a');
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent('click', true, true);
-    const cvsDownload = this.DownloadCvs.getContext('2d');
-    // const blob = paintUtil.base64ToBlob(this.CoreCVS.toDataURL());
+    const dataURL = this.Core.toDataURL();
+    const blob = tools.base64ToBlob(dataURL);
+    aLink.download = `${new Date().getTime()}.png`;
+    aLink.href = URL.createObjectURL(blob);
+    aLink.click();
+  }
+
+  createMiniQrcode() {
+    const qirous = new Qrious({ element: this.Mini });
+    const ctx = this.Mini.getContext('2d');
+    qirous.size = 400;
+    qirous.padding = 10;
     const img = new Image();
-    img.src = this.CoreCVS.toDataURL();
+    img.src = this.props.logo;
+    img.crossOrigin = 'Anonymous';
     img.onload = () => {
-      cvsDownload.drawImage(img, 0, 0, paintUtil.qrcodeSize, paintUtil.qrcodeSize);
-      const blob2 = paintUtil.base64ToBlob(this.DownloadCvs.toDataURL());
-      aLink.download = `${new Date().getTime()}.png`;
-      aLink.href = URL.createObjectURL(blob2);
-      aLink.click();
+      ctx.drawImage(img, 150, 150, 100, 100);
+      tools.roundRect(ctx, 150, 150, 100, 100, 10, 'border');
     };
-    // const downloadImg = paintUtil.createImage(this.CoreCVS.toDataURL());
   }
 
   render() {
     return (
       <div>
-        <canvas ref={(CoreCVS) => { this.CoreCVS = CoreCVS; }} />
-        <canvas
-          ref={(DownloadCvs) => {this.DownloadCvs = DownloadCvs; }} 
-          width='1300'
-          height='1600'
-          style={{
-            width: 1300,
-            height: 1600
-          }}
-        />
+        <canvas ref={Core => { this.Core = Core; }} style={{ display: 'none' }} />
+        <canvas ref={Mini => { this.Mini = Mini; }}/>
       </div>
     );
   }
 }
 
-export default QrcodeOpt;
+export default QrcodeOptimize;
