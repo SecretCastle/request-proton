@@ -90,13 +90,28 @@ class Uploader extends PureComponent {
     super(props);
     this.state = {
       status: false,
-      show: false
+      show: false,
+      type: null
     };
+  }
+
+  componentWillMount() {
+    this.setState({
+      type: this.props.type
+    });
   }
 
   componentDidMount() {
     this.createUploader();
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.type !== this.state.type) {
+      this.setState({
+        type: nextProps.type
+      });
+    }
+  } 
 
   macOS_filter = (files) => {
     const { accept } = this.props;
@@ -168,7 +183,8 @@ class Uploader extends PureComponent {
         Key(_, file){
           console.log('files keys');          
           const filaname = randomFileName(file);
-          const collect = collectfiles(filaname, type);
+          // const collect = collectfiles(filaname, type);
+          const collect = collectfiles(filaname, this.state.type);
           return Promise.resolve(collect);
         },
         FilesAdded(_, fille) {
