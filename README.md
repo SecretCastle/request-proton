@@ -4,7 +4,7 @@
 
 `ts` version
 
-[点我](https://github.com/SecretCastle/request-proton/ts/Intro.md)
+[点我](https://github.com/SecretCastle/request-proton/tree/master/ts)
 
 ## JS Version
 
