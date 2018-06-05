@@ -1,5 +1,13 @@
 # Request Document
 
+## New Version
+
+`ts` version
+
+[点我](https://github.com/SecretCastle/request-proton/ts/Intro.md)
+
+## JS Version
+
 > `./src/core/request-upload-baidu.js` 基于[bce-bos-uploader](https://github.com/leeight/bce-bos-uploader)的OSS直传React组件
 
 > `./src/core/request-upload.js` 基于[plupload](https://github.com/moxiecode/plupload)的OSS直传React组件
