@@ -63,7 +63,7 @@ class RequestProton implements RequestBasic {
         }); 
     }
 
-    async req(params: { url: string, method ?: string, param ?: Object }, delay = 1000): Promise<Object> {
+    async req(params: { url: string, method ?: string, param ?: Object }, delay = 10000): Promise<Object> {
         try {
             const response = await Promise.race([this.timeoutfn(delay), this.publicReq(params)]);
             return response;
@@ -72,9 +72,8 @@ class RequestProton implements RequestBasic {
         }
     }
 
-    async muiltiReq(reqArr: Array<Object>): Promise<Object> {
+    async muiltiReq(reqArr: Array<Object>, delay = 10000): Promise<Object> {
         let res = [];
-        console.log(reqArr instanceof Array);
         if (typeof reqArr !== 'object') {
             throw new Error(`please set ${reqArr} to Array`);
         }
@@ -152,9 +151,19 @@ class RequestProton implements RequestBasic {
 }
 
 let reqInstance = new RequestProton('https://cnodejs.org/api/v1');
-reqInstance.req({
-    url: '/topics'
-}).then(res => {
-    console.log(res);
-});
+/**
+ * 单请求例子
+ */
+// reqInstance.req({
+//     url: '/topics'
+// }).then(res => {
+//     console.log(res);
+// });
+
+/**
+ * 多请求例子
+ */
+// reqInstance.muiltiReq([{url: '/topics'}, {url: '/topics'}]).then(res => {
+//     console.log(res);
+// })
 
