@@ -19,4 +19,3 @@ import 'babel-polyfill';
 import './qrcode_demo';
 
 // import './ref_demo';
-
